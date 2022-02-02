@@ -1,5 +1,7 @@
 package Requests;
 
+import Models.RequestModels.BookingdatesRequestModel;
+import Models.RequestModels.CreateBookingRequestModel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.json.JSONObject;
@@ -13,6 +15,7 @@ public class PostRequests {
 
     @Test
     void createBookingTest(){
+
 
         //Create JSon body
         JSONObject body = new JSONObject();
@@ -32,12 +35,26 @@ public class PostRequests {
                 .body(body.toString())
                 .post("https://restful-booker.herokuapp.com/booking");
 
-        Assert.assertEquals(200, response.statusCode());
+        //Verification
+        Assert.assertEquals(response.statusCode(), 200);
         response.print();
 
 
 
-        //Verification
 
+
+    }
+
+    @Test
+    void CreateWithModel(){
+        BookingdatesRequestModel bookingDates = new BookingdatesRequestModel("2018-01-01", "2019-01-01");
+        CreateBookingRequestModel booking = new CreateBookingRequestModel("Gevorg", "Stepanyan", 999, false, bookingDates, "Baby seat");
+
+        Response response = RestAssured.given().contentType(ContentType.JSON)
+                .body(booking)
+                .post("https://restful-booker.herokuapp.com/booking");
+
+        Assert.assertEquals(response.statusCode(), 200);
+        response.print();
     }
 }
